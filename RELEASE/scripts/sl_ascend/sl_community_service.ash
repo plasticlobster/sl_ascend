@@ -887,7 +887,7 @@ boolean LA_cs_communityService()
 					{
 						if(current_mcd() < 10)
 						{
-							change_mcd(10);
+							sl_change_mcd(11);
 						}
 						if(item_amount($item[Astral Statuette]) > 0)
 						{
@@ -995,7 +995,7 @@ boolean LA_cs_communityService()
 
 			if(!get_property("sl_tryPowerLevel").to_boolean())
 			{
-				change_mcd(0);
+				sl_change_mcd(0);
 			}
 
 			int missing = 0;
@@ -1372,7 +1372,7 @@ boolean LA_cs_communityService()
 				wait(5);
 				if(get_property("kingLiberated").to_boolean())
 				{
-					cli_execute("call kingcheese");
+					cli_execute("call kingsool");
 					return true;
 				}
 				else

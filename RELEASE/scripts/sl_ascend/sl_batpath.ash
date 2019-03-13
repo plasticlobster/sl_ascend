@@ -32,7 +32,7 @@ void bat_initializeDay(int day)
 
 	if(get_property("sl_day_init").to_int() < day)
 	{
-		set_property("sl_bat_bloodBank", 0); // 0: no blood yet, 1: base blood, 2: intimidating blood
+		set_property("_sl_bat_bloodBank", 0); // 0: no blood yet, 1: base blood, 2: intimidating blood
 		set_property("sl_bat_ensorcels", 0);
 		set_property("sl_bat_howls", 0);
 		set_property("sl_bat_howled", "");
@@ -120,7 +120,7 @@ skill [int] bat_pickSkills(int hpLeft)
 		return true;
 	}
 
-	if(get_property("sl_bat_bloodBank") != "2")
+	if(get_property("_sl_bat_bloodBank") != "2")
 		addPick($skill[Intimidating Aura]);
 
 	// no forms JUST yet
@@ -129,8 +129,6 @@ skill [int] bat_pickSkills(int hpLeft)
 		Blood Chains,
 		Madness of Untold Aeons,
 		Sinister Charm,
-		Spot Weakness,
-		Preternatural Strength,
 		Blood Cloak,
 		Baleful Howl,
 		Perceive Soul,
@@ -142,6 +140,8 @@ skill [int] bat_pickSkills(int hpLeft)
 		Macabre Cunning,
 		Ferocity,
 		Flesh Scent,
+		Spot Weakness,
+		Preternatural Strength,
 		Savage Bite,
 		Ceaseless Snarl,
 		Spectral Awareness,
@@ -235,9 +235,10 @@ boolean bat_consumption()
 	{
 		foreach it in its
 		{
-			if(creatable_amount(it) > 0)
+			if(creatable_amount(it) > 0 || available_amount(it) > 0)
 			{
-				create(1, it);
+				if (available_amount(it) == 0)
+					create(1, it);
 				if(it.fullness > 0)
 					ccEat(1, it);
 				else if(it.inebriety > 0)
@@ -268,30 +269,34 @@ boolean bat_consumption()
 		ccEat(1, $item[blood-soaked sponge cake]);
 		return true;
 	}
-	if (my_adventures() <= 5 && item_amount($item[blood bag]) > 0 && inebriety_left() > 0)
+	if (my_adventures() <= 5 && item_amount($item[blood bag]) > 0)
 	{
-		// don't auto consume bottle of Sanguiovese, only drink those if we're down to one adventure
-		if(!consume_first($items[vampagne, dusty bottle of blood, Red Russian, mulled blood]))
-			return true;
+		if (inebriety_left() > 0)
+		{
+			// don't auto consume bottle of Sanguiovese, only drink those if we're down to one adventure
+			if(consume_first($items[vampagne, dusty bottle of blood, Red Russian, mulled blood]))
+				return true;
+		}
+		if (fullness_left() > 0)
+		{
+			// don't auto consume bloodstick, only eat those if we're down to one adventure AFTER booze
+			if(consume_first($items[blood-soaked sponge cake, blood roll-up, blood snowcone, actual blood sausage, ]))
+				return true;
+		}
 	}
 
-	if (my_adventures() <= 5 && item_amount($item[blood bag]) > 0 && fullness_left() > 0)
+	if(my_adventures() <= 1)
 	{
-		// don't auto consume bloodstick, only eat those if we're down to one adventure AFTER booze
-		if(consume_first($items[blood-soaked sponge cake, blood roll-up, blood snowcone, actual blood sausage, ]))
-			return true;
-	}
-
-	if(my_adventures() <= 1 && fullness_left() > 0)
-	{
-		if (consume_first($items[bloodstick]))
-			return true;
-	}
-
-	if(my_adventures() <= 1 && inebriety_left() > 0)
-	{
-		if (consume_first($items[bottle of Sanguiovese]))
-			return true;
+		if (fullness_left() > 0)
+		{
+			if (consume_first($items[bloodstick]))
+				return true;
+		}
+		if(inebriety_left() > 0)
+		{
+			if (consume_first($items[bottle of Sanguiovese]))
+				return true;
+		}
 	}
 
 	return true;
@@ -322,11 +327,11 @@ boolean LM_batpath()
 		return true;
 	}
 
-	int bloodBank = get_property("sl_bat_bloodBank").to_int();
+	int bloodBank = get_property("_sl_bat_bloodBank").to_int();
 	if(bloodBank == 0 || (bloodBank == 1 && have_skill($skill[Intimidating Aura])))
 	{
 		visit_url("place.php?whichplace=town_right&action=town_bloodbank");
-		set_property("sl_bat_bloodBank", (have_skill($skill[Intimidating Aura]) ? 2 : 1));
+		set_property("_sl_bat_bloodBank", (have_skill($skill[Intimidating Aura]) ? 2 : 1));
 	}
 
 	return false;

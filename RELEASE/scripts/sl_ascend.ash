@@ -7784,6 +7784,7 @@ boolean L12_finalizeWar()
 		council();
 	}
 
+	cli_execute("refresh quests");
 	if(get_property("questL12War") != "finished")
 	{
 		abort("Failing to complete the war.");
@@ -9105,7 +9106,7 @@ boolean L7_crypt()
 			set_property("sl_crypt", "finished");
 			use(1, $item[chest of the bonerdagon]);
 		}
-		else if(get_property("questL07Cyrptic") == "finished")
+		else if(cli_execute("refresh quests") && get_property("questL07Cyrptic") == "finished")
 		{
 			print("Looks like we don't have the chest of the bonerdagon but KoLmafia marked Cyrpt quest as finished anyway. Probably some weird path shenanigans.", "red");
 			set_property("sl_crypt", "finished");
@@ -12231,9 +12232,24 @@ boolean L9_oilPeak()
 	{
 		buffMaintain($effect[Punchable Face], 50, 1, 1);
 	}
-	if((monster_level_adjustment() < 60) && (item_amount($item[Dress Pants]) > 0))
+	if(monster_level_adjustment() < 60)
 	{
-		equip($slot[Pants], $item[Dress Pants]);
+		buffMaintain($effect[Ceaseless Snarling], 0, 1, 1);
+	}
+	if((monster_level_adjustment() < 60))
+	{
+		if (item_amount($item[Dress Pants]) > 0)
+		{
+			equip($slot[Pants], $item[Dress Pants]);
+		}
+		else
+		{
+			januaryToteAcquire($item[tinsel tights]);
+			if(item_amount($item[tinsel tights]) > 0)
+			{
+				equip($item[tinsel tights]);
+			}
+		}
 	}
 	ccAdv(1, $location[Oil Peak]);
 	if(get_property("lastAdventure") == "Unimpressed with Pressure")
@@ -12379,6 +12395,13 @@ boolean L9_chasmBuild()
 		}
 
 		ccAdv(1, $location[The Smut Orc Logging Camp]);
+		if(item_amount($item[Smut Orc Keepsake Box]) > 0)
+		{
+			if(sl_my_path() != "G-Lover")
+			{
+				use(1, $item[Smut Orc Keepsake Box]);
+			}
+		}
 		visit_url("place.php?whichplace=orc_chasm&action=bridge"+(to_int(get_property("chasmBridgeProgress"))));
 		return true;
 	}
@@ -13878,7 +13901,7 @@ boolean doTasks()
 	{
 		if(my_daycount() == 1)
 		{
-			if((my_adventures() < 10) && (my_level() >= 7))
+			if((my_adventures() < 10) && (my_level() >= 7) && (my_hp() > 0))
 			{
 				fightScienceTentacle();
 				if(my_mp() > (2 * mp_cost($skill[Evoke Eldritch Horror])))
@@ -13887,7 +13910,7 @@ boolean doTasks()
 				}
 			}
 		}
-		else if(my_level() >= 9)
+		else if((my_level() >= 9) && (my_hp() > 0))
 		{
 			fightScienceTentacle();
 		}
@@ -13962,7 +13985,7 @@ boolean doTasks()
 
 	if(in_hardcore() && isGuildClass())
 	{
-		if(L6_friarsGetParts() || L6_friarsHotWing())
+		if(L6_friarsGetParts())
 		{
 			return true;
 		}
@@ -13972,7 +13995,6 @@ boolean doTasks()
 	if(LX_setBallroomSong())			return true;
 	if(L3_tavern())						return true;
 	if(L6_friarsGetParts())				return true;
-	if(L6_friarsHotWing())				return true;
 	if(LX_hardcoreFoodFarm())			return true;
 	
 	if(in_hardcore() && LX_steelOrgan())
@@ -14169,6 +14191,10 @@ void sl_begin()
 	{
 		bat_startAscension();
 	}
+	else if(contains_text(page, "<b>Torpor</b>") && contains_text(page, "Madness of Untold Aeons") && contains_text(page, "Rest for untold Millenia"))
+	{
+		bat_reallyPickSkills(20);
+	}
 
 #	if(my_class() == $class[Astral Spirit])
 	if(to_string(my_class()) == "Astral Spirit")
@@ -14179,7 +14205,7 @@ void sl_begin()
 	}
 
 	print("Hello " + my_name() + ", time to explode!");
-	print("This is version: " + svn_info("slascend-sl_ascend").last_changed_rev + " Mafia: " + get_revision());
+	print("This is version: " + svn_info("sl_ascend").last_changed_rev + " Mafia: " + get_revision());
 	print("This is day " + my_daycount() + ".");
 	print("Turns played: " + my_turncount() + " current adventures: " + my_adventures());
 	print("Current Ascension: " + sl_my_path());
