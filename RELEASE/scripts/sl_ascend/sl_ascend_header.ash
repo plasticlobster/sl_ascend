@@ -545,6 +545,7 @@ boolean godLobsterCombat(item it);							//Defined in sl_ascend/sl_mr2018.ash
 boolean godLobsterCombat(item it, int goal);				//Defined in sl_ascend/sl_mr2018.ash
 boolean godLobsterCombat(item it, int goal, string option);	//Defined in sl_ascend/sl_mr2018.ash
 boolean fantasyRealmToken();								//Defined in sl_ascend/sl_mr2018.ash
+boolean fantasyRealmAvailable();							//Defined in sl_ascend/sl_mr2018.ash
 boolean songboomSetting(string goal);						//Defined in sl_ascend/sl_mr2018.ash
 boolean songboomSetting(int choice);						//Defined in sl_ascend/sl_mr2018.ash
 boolean fightClubNap();										//Defined in sl_ascend/sl_mr2018.ash
@@ -904,7 +905,8 @@ boolean groundhogAbort(location loc);						//Defined in sl_ascend/sl_groundhog.a
 boolean LM_groundhog();										//Defined in sl_ascend/sl_groundhog.ash
 
 void bat_startAscension(); // Defined in sl_ascend/sl_batpath.ash
-void bat_initializeSettings(); // Defined in sl_ascend/sl_batpath.ash
+void bat_initializeSession(); // Defined in sl_ascend/sl_batpath.ash
+void bat_terminateSession(); // Defined in sl_ascend/sl_batpath.ash
 void bat_initializeDay(int day); // Defined in sl_ascend/sl_batpath.ash
 int bat_maxHPCost(skill sk); // Defined in sl_ascend/sl_batpath.ash
 int bat_baseHP(); // Defined in sl_ascend/sl_batpath.ash
@@ -915,6 +917,14 @@ boolean bat_shouldPickSkills(int hpLeft); // Defined in sl_ascend/sl_batpath.ash
 boolean bat_shouldEnsorcel(monster m); // Defined in sl_ascend/sl_batpath.ash
 boolean bat_consumption(); // Defined in sl_ascend/sl_batpath.ash
 boolean bat_skillValid(skill sk); // Defined in sl_ascend/sl_batpath.ash
+boolean bat_tryBloodBank(); // Defined in sl_ascend/sl_batpath.ash
+void bat_formNone(); // Defined in sl_ascend/sl_batpath.ash
+void bat_formWolf(); // Defined in sl_ascend/sl_batpath.ash
+void bat_formMist(); // Defined in sl_ascend/sl_batpath.ash
+void bat_formBats(); // Defined in sl_ascend/sl_batpath.ash
+void bat_clearForms(); // Defined in sl_ascend/sl_batpath.ash
+boolean bat_switchForm(effect form); // Defined in sl_ascend/sl_batpath.ash
+boolean bat_formPreAdventure(); // Defined in sl_ascend/sl_batpath.ash
 boolean LM_batpath(); // Defined in sl_ascend/sl_batpath.ash
 
 //Record from sl_ascend/sl_zone.ash

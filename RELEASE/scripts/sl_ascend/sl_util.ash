@@ -2567,7 +2567,14 @@ boolean sl_deleteMail(kmailObject msg)
 	{
 		return true;
 	}
-	if((msg.fromid == 3038166) && (contains_text(msg.message, "CheeseFax completed your relationship fortune test")) && get_property("sl_hideAdultery").to_boolean())
+	if (get_property("sl_consultChoice") != ""){
+		int id = get_player_id(get_property("sl_consultChoice")).to_int();
+		if( msg.fromid == id && (contains_text(msg.message, "completed your relationship fortune test")) && get_property("sl_hideAdultery").to_boolean())
+		{
+			return true;
+		}
+	}
+	if((msg.fromid == 3038166) && (contains_text(msg.message, "completed your relationship fortune test")) && get_property("sl_hideAdultery").to_boolean())
 	{
 		return true;
 	}
@@ -2804,7 +2811,7 @@ boolean providePlusNonCombat(int amt, boolean doEquips)
 	}
 
 	shrugAT($effect[The Sonata of Sneakiness]);
-	//Assumes that Rev Engine was taken with Extra-Quite Muffler.
+	//Assumes that Rev Engine was taken with Extra-Quiet Muffler.
 	foreach eff in $effects[Shelter Of Shed, Brooding, Muffled, Smooth Movements, The Sonata of Sneakiness, Song of Solitude, Inked Well, Bent Knees, Extended Toes, Ink Cloud, Patent Invisibility, Cloak of Shadows]
 	{
 		buffMaintain(eff, 0, 1, 1);

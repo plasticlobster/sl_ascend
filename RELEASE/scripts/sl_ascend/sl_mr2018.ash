@@ -242,6 +242,18 @@ boolean godLobsterCombat(item it, int goal, string option)
 	return true;
 }
 
+boolean fantasyRealmAvailable()
+{
+	if(!is_unrestricted($item[FantasyRealm membership packet]))
+	{
+		return false;
+	}
+	if((get_property("frAlways").to_boolean() || get_property("_frToday").to_boolean()))
+	{
+		return true;
+	}
+	return false;
+}
 
 boolean fantasyRealmToken()
 {
@@ -719,6 +731,13 @@ boolean neverendingPartyCombat(effect eff, boolean hardmode, string option)
 	if(hardmode)
 	{
 		equip($slot[shirt], $item[PARTY HARD T-shirt]);
+	} else if (januaryToteTurnsLeft($item[Makeshift Garbage Shirt]) > 0)
+	{
+		januaryToteAcquire($item[Makeshift Garbage Shirt]);
+		if(item_amount($item[Makeshift Garbage Shirt]) > 0)
+		{
+			equip($slot[shirt], $item[Makeshift Garbage Shirt]);
+		}
 	}
 
 	boolean retval;
